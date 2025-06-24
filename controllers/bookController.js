@@ -7,6 +7,7 @@ import Book from "../Models/Book.js";
             role: userExits.role
         }  */
 
+/* Solo los usuarios registrados y admins puede crear libros*/
 export const addBook = async (req,res) =>{
     const  {bookname, author} = req.body;
     const {id} = req.user;
@@ -30,3 +31,15 @@ export const addBook = async (req,res) =>{
     }
     
 }
+
+/* Solo el usuario que lo creo y el admin pueden cambiar nombre y autor*/
+export const changeNameAuthorBook = async (req,res) =>{}
+
+/* Solo el usuario que lo creo y el admin pueden borrarlos*/
+export const deleteBook = async (req,res) =>{}
+
+/* Solo el usuario que lo creo puede cambiar el estado de lectura*/
+export const changeBookStatus = async (req,res) =>{}
+
+/* Solo el usuario que lo creo puede cambiar el puntaje*/
+export const changeBookRating= async (req,res) =>{}
