@@ -29,12 +29,13 @@ export const verifyToken = async (req, res, next )=>{
         }
         //Si todo es correcto continua a bookController
         
-        console.log(userExits.id)
+        
         req.user ={
             id: userExits.id,
             username: userExits.username,
             role: userExits.role
         } 
+        
         next();
     } catch (error) {
          return res.status(500).json({status:'error', message:'internal server error',error});
