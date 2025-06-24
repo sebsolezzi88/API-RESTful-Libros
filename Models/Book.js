@@ -1,6 +1,6 @@
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('../config/database.js');
-const User = require('./User');
+import { DataTypes, Model } from 'sequelize';
+import sequelize  from '../config/database.js';
+import User from './User.js';
 
 class Book extends Model {}
 
@@ -50,4 +50,4 @@ Book.init(
 Book.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 User.hasMany(Book, { foreignKey: 'userId', as: 'books' });
 
-module.exports = Book;
+export default  Book;

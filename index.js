@@ -1,6 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
+import sequelize from './config/database.js';
+import './Models/User.js';
+import './Models/Book.js';
 
 //Cargar variables de entorno
 dotenv.config();
@@ -9,6 +12,23 @@ const PORT = process.env.PORT || 3200;
 const app = express();
 
 app.use(express.json());
+
+//Sincronizar tablas DB;
+const start = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('✅ Conexión a la base de datos exitosa.');
+    
+    // usa force: true solo para borrar y regrear
+    await sequelize.sync({ alter: true }); 
+    console.log('✅ Modelos sincronizados con la base de datos.');
+
+
+  } catch (err) {
+    console.error('❌ Error al conectar o sincronizar:', err);
+  }
+};
+//start();
 
 //Rutas
 app.use('/auth',authRoutes);
