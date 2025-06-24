@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import User from '../Models/User.js';
 
 dotenv.config();
 
@@ -11,6 +12,39 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const validRoles = ["admin", "user"];
 
 
-export const registerUser = async (req, res) => {}
+export const registerUser = async (req, res) => {
+     const {username,password,password2,role} = req.body;
+      
+      //comprobar username
+      if(username.trim()==="" || password.trim() === '' ){
+        return res.status(400).json({status:'error', message:'username required'});
+      }
+      //comprobar passwords
+      if(password !== password2){
+        return res.status(400).json({status:'error', message:'passwords must match'});
+      }
+      
+      //comprobamos que no exista ese userneme
+      const userExists = await User.findOne({where:{username}});
+      if(userExists){
+        return res.status(400).json({status:'error', message:'username already in use'});
+      }
+    
+      try {
+        //Aseguramos el role si el usuario, no manda nada o si pone otras palabras
+        const assignedRole = validRoles.includes(role) ? role : "user";
+        const passwordHash = await bcrypt.hash(password,10);
+         /*Forzamos el tipo UserCreationAttributes por que typescrip queria obligatorioamene
+         el campo ID  */
+        User.create(
+          {username,
+          password:passwordHash,
+          role: assignedRole
+          }) 
+          return res.status(201).json({status:'success', message:'user created successfully'});
+      } catch (error) {
+         return res.status(500).json({status:'error', message:'internal server error'});
+      }
+}
 
 export const loginUser = async (req,res) =>{}
