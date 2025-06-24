@@ -16,6 +16,12 @@ export const addBook = async (req,res) =>{
           return res.status(400).json({status:'error', message:'bookname or author required'});
     }
     try {
+        // Verificar si el mismo libro ya fue guardado por el mismo usuario
+        const existingBook = await Book.findOne({where: {bookname,userId: id}});
+
+        if (existingBook) {
+        return res.status(409).json({status: 'error', message: 'you already saved this book.'});
+        }
         //Guardamos el libro en la base de datos
         await Book.create({bookname,author,userId:id})
         return res.status(201).json({status:'success', message:'book add successfully'});
