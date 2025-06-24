@@ -47,4 +47,32 @@ export const registerUser = async (req, res) => {
       }
 }
 
-export const loginUser = async (req,res) =>{}
+export const loginUser = async (req,res) =>{
+    const {username,password} = req.body;
+        if(username === '' || password === ''){
+          return res.status(400).json({status:'error', message:'username or password required'});
+        }
+      try {
+        const userExists = await User.findOne({where:{username}});
+    
+        if(!userExists){
+          return res.status(400).json({status:'error', message:'username not found'});
+        }
+        
+        if(!await bcrypt.compare(password,userExists.password)){
+          return res.status(400).json({status:'error', message:'invalid credentials'});
+        }
+        //Si los password coincide generamos el token
+        const payload = {
+          id: userExists.id,
+          username: userExists.username,
+          role: userExists.role,
+        }
+        
+        const token = jwt.sign(payload,JWT_SECRET,{ expiresIn: '1h' } ); 
+        return res.status(201).json({status:'success', token})
+    
+      } catch (error) {
+         return res.status(500).json({status:'error', message:'internal server error'});
+      }
+}
