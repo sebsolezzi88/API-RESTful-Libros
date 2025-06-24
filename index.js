@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
+import bookRoutes from './routes/bookRoutes.js';
 import sequelize from './config/database.js';
 import './Models/User.js';
 import './Models/Book.js';
@@ -32,6 +33,8 @@ const start = async () => {
 
 //Rutas
 app.use('/auth',authRoutes);
+app.use('/book',bookRoutes);
+
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
