@@ -8,7 +8,7 @@ import { isAdmin } from '../middlewares/adminMiddelwares.js';
 const router = Router();
 
 router.get('/getallbooks',verifyToken,isAdmin,getAllBooks);
-router.delete('/addbook',verifyToken ,isAdmin,deleteAnyUser);
+router.delete('/delete-user/:id',verifyToken ,isAdmin,deleteAnyUser);
 
 
 

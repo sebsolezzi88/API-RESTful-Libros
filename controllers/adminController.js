@@ -32,5 +32,18 @@ export const getAllBooks = async (req , res )=>{
 }
 
 export const deleteAnyUser = async (req , res )=>{
+    try {
+        const userId = req.params.id;
+        const user = await User.findByPk(userId);
+        if (!user) {
+        return res.status(404).json({ status: 'error', message: 'User not found' });
+        }
+
+        await user.destroy(); 
+        return res.status(200).json({ status: 'success', message: 'User account deleted' });
     
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        return res.status(500).json({ status: 'error', message: 'Error deleting account' });
+    }
 }

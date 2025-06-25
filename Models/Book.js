@@ -47,7 +47,7 @@ Book.init(
 );
 
 // Relaciones
-Book.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-User.hasMany(Book, { foreignKey: 'userId', as: 'books',onDelete:'CASCADE' });
+Book.belongsTo(User, { foreignKey: 'userId', as: 'user',onDelete:'CASCADE', onUpdate: 'CASCADE' });
+User.hasMany(Book, { foreignKey: 'userId', as: 'books',onDelete:'CASCADE', onUpdate: 'CASCADE' });
 
 export default  Book;
