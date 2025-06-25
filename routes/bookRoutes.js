@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { addBook, changeBookRating, changeBookStatus, 
-        changeNameAuthorBook, deleteBook, filterBooksByStatus, 
+         changeNameAuthorCategoryBook, deleteBook, filterBooksByStatus, 
         getAllBooksFromUser, getBookStats, searchBooksByTitle } from '../controllers/bookController.js';
 import { verifyToken } from '../middlewares/authMiddlewares.js';
 
@@ -13,7 +13,7 @@ router.get('/searchbooks',verifyToken,searchBooksByTitle);
 router.get('/stats', verifyToken, getBookStats);
 router.post('/addbook',verifyToken ,addBook);
 router.delete('/deletebook/:id',verifyToken,deleteBook);
-router.put('/updatebook/:id',verifyToken,changeNameAuthorBook);
+router.put('/updatebook/:id',verifyToken,changeNameAuthorCategoryBook);
 router.put('/changebooktatus/:id',verifyToken,changeBookStatus);
 router.put('/changebookrating/:id',verifyToken,changeBookRating);
 

@@ -7,42 +7,70 @@ import Book from "../Models/Book.js";
             username: userExits.username,
             role: userExits.role
         }  */
-
+  const validCategories = [
+    'fiction',
+    'non-fiction',
+    'fantasy',
+    'science',
+    'history',
+    'biography',
+    'romance',
+    'mystery',
+    'horror',
+    'self-help',
+    'philosophy',
+    'technology',
+    'poetry',
+    'comics'
+  ];
 /* Solo los usuarios registrados y admins puede crear libros*/
-export const addBook = async (req,res) =>{
-    const  {bookname, author} = req.body;
-    const {id} = req.user;
-    console.log(`el id del usuario es ${id}`)
-   
-    if(bookname.trim() === '' || author.trim() === ''){
-          return res.status(400).json({status:'error', message:'bookname or author required'});
-    }
-    try {
-        // Verificar si el mismo libro ya fue guardado por el mismo usuario
-        const existingBook = await Book.findOne({where: {bookname,userId: id}});
+export const addBook = async (req, res) => {
+  const { bookname, author, category } = req.body;
+  const { id } = req.user;
 
-        if (existingBook) {
-        return res.status(409).json({status: 'error', message: 'you already saved this book.'});
-        }
-        //Guardamos el libro en la base de datos
-        await Book.create({bookname,author,userId:id})
-        return res.status(201).json({status:'success', message:'book add successfully'});
-    } catch (error) {
-        return res.status(500).json({status:'error', message:'internal server error', err:error});
+  // Lista de categorías válidas (debe coincidir con las del modelo Book)
+
+
+  // Validaciones básicas
+  if (!bookname?.trim() || !author?.trim()) {
+    return res.status(400).json({ status: 'error', message: 'book name and author are required'});
+  }
+
+  if (!validCategories.includes(category)) {
+    return res.status(400).json({status: 'error', message: `invalid category. Must be one of: ${validCategories.join(', ')}`});
+  }
+
+  try {
+    // Verificar si el mismo libro ya fue guardado por el mismo usuario
+    const existingBook = await Book.findOne({where: { bookname, userId: id }});
+
+    if (existingBook) {
+      return res.status(409).json({status: 'error', message: 'you already saved this book.'});
     }
-    
+
+    // Guardar el libro en la base de datos
+    await Book.create({ bookname, author, category, userId: id });
+
+    return res.status(201).json({status: 'success', message: 'Book added successfully'});
+  } catch (error) {
+    return res.status(500).json({status: 'error',message: 'Internal server error',error });
+  }
 }
 
 /* Solo el usuario que lo creo y el admin pueden cambiar nombre y autor*/
-export const changeNameAuthorBook = async (req,res) =>{
-    const  {bookname, author} = req.body;
+export const changeNameAuthorCategoryBook = async (req,res) =>{
+    const  {bookname, author,category} = req.body;
     const idBook = req.params.id;
     const idUser = req.user.id;
 
     if(bookname.trim() === '' || author.trim() === ''){
           return res.status(400).json({status:'error', message:'bookname or author required'});
     }
-    
+
+    if (!validCategories.includes(category)) {
+    return res.status(400).json({status: 'error', message: `invalid category. Must be one of: ${validCategories.join(', ')}`});
+    }
+
     try {
         //buscar el libro
         const bookExist = await Book.findOne({where:{id:idBook}});
@@ -57,7 +85,8 @@ export const changeNameAuthorBook = async (req,res) =>{
         
         // Editar los campos
         bookExist.bookname = bookname;
-        bookExist.author = author
+        bookExist.author = author;
+        bookExist.category = category;
         
         //guardar cambios
         await bookExist.save()
