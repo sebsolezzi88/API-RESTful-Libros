@@ -1,3 +1,4 @@
+import {Op} from 'sequelize';
 import Book from "../Models/Book.js";
 
 
@@ -195,6 +196,30 @@ export const filterBooksByStatus = async (req, res) => {
       where: {
         status,
         userId: req.user.id
+      }
+    });
+
+    return res.json({ status: 'success', books });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error', error });
+  }
+}
+
+/* Obtener libros por su titulo like */
+export const searchBooksByTitle = async (req, res) => {
+  const { title } = req.query;
+
+  if (!title) {
+    return res.status(400).json({ status: 'error', message: 'Title is required' });
+  }
+
+  try {
+    const books = await Book.findAll({
+      where: {
+        bookname: {
+          [Op.like]: `%${title}%` 
+        },
+        userId: req.user.id 
       }
     });
 
