@@ -7,8 +7,8 @@ const router = Router();
 
 router.get('/getbooks',verifyToken,getAllBooksFromUser);
 router.post('/addbook',verifyToken ,addBook);
-router.post('/deletebook/:id',verifyToken,deleteBook);
-router.post('/updatebook/:id',verifyToken,changeNameAuthorBook);
+router.delete('/deletebook/:id',verifyToken,deleteBook);
+router.put('/updatebook/:id',verifyToken,changeNameAuthorBook);
 router.put('/changebooktatus/:id',verifyToken,changeBookStatus);
 router.put('/changebookrating/:id',verifyToken,changeBookRating);
 
