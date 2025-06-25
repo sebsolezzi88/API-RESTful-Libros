@@ -48,6 +48,6 @@ Book.init(
 
 // Relaciones
 Book.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-User.hasMany(Book, { foreignKey: 'userId', as: 'books' });
+User.hasMany(Book, { foreignKey: 'userId', as: 'books',onDelete:'CASCADE' });
 
 export default  Book;
