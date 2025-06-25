@@ -95,7 +95,30 @@ export const deleteBook = async (req,res) =>{
 }
 
 /* Solo el usuario que lo creo puede cambiar el estado de lectura*/
-export const changeBookStatus = async (req,res) =>{}
+export const changeBookStatus = async (req,res) =>{
+    const bookId = req.params.id;
+    const userId = req.user.id;
+    const { status } = req.body;
+
+    const allowedStatuses = ['unread', 'reading', 'read'];
+    if (!allowedStatuses.includes(status)) {
+        return res.status(400).json({status:'error', message:'invalid status'});
+    }
+
+    try {
+        const book = await Book.findOne({ where: { id: bookId, userId } });
+        if (!book) {
+            return res.status(404).json({status:'error', message:'book not found'});
+        }
+
+        book.status = status;
+        await book.save();
+
+        return res.json({ status:'success',message: 'book updated', book });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error al actualizar el estado' });
+    }
+}
 
 /* Solo el usuario que lo creo puede cambiar el puntaje*/
 export const changeBookRating= async (req,res) =>{}
