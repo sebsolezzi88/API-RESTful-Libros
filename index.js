@@ -32,8 +32,8 @@ const start = async () => {
 //start();
 
 //Rutas
-app.use('/auth',authRoutes);
-app.use('/book',bookRoutes);
+app.use('/api/auth',authRoutes);
+app.use('/api/book',bookRoutes);
 
 
 app.listen(PORT, () => {
