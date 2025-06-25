@@ -1,4 +1,4 @@
-import {Op} from 'sequelize';
+import {Op,fn,col} from 'sequelize';
 import Book from "../Models/Book.js";
 
 
@@ -224,6 +224,39 @@ export const searchBooksByTitle = async (req, res) => {
     });
 
     return res.json({ status: 'success', books });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error', error });
+  }
+};
+
+/* Obtener estadiscitas del perfil del usuario */
+export const getBookStats = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Contar libros por estado
+    const totalBooks = await Book.count({ where: { userId } });
+    const read = await Book.count({ where: { userId, status: 'read' } });
+    const reading = await Book.count({ where: { userId, status: 'reading' } });
+    const unread = await Book.count({ where: { userId, status: 'unread' } });
+
+    // Calcular promedio de rating (solo para libros con rating > 0)
+    const ratingResult = await Book.findOne({
+      where: { userId },
+      attributes: [[fn('AVG', col('rating')), 'averageRating']]
+    });
+
+    const averageRating = parseFloat(ratingResult?.dataValues.averageRating || 0).toFixed(1);
+
+    return res.json({
+      status: 'success',
+      totalBooks,
+      read,
+      reading,
+      unread,
+      averageRating: Number(averageRating)
+    });
+
   } catch (error) {
     return res.status(500).json({ status: 'error', message: 'Internal server error', error });
   }

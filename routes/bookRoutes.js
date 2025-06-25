@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { addBook, changeBookRating, changeBookStatus, 
         changeNameAuthorBook, deleteBook, filterBooksByStatus, 
-        getAllBooksFromUser, searchBooksByTitle } from '../controllers/bookController.js';
+        getAllBooksFromUser, getBookStats, searchBooksByTitle } from '../controllers/bookController.js';
 import { verifyToken } from '../middlewares/authMiddlewares.js';
 
 
@@ -10,6 +10,7 @@ const router = Router();
 router.get('/getbooks',verifyToken,getAllBooksFromUser);
 router.get('/filterbooks',verifyToken,filterBooksByStatus); /* /books/filterbook?status=read */
 router.get('/searchbooks',verifyToken,searchBooksByTitle);
+router.get('/stats', verifyToken, getBookStats);
 router.post('/addbook',verifyToken ,addBook);
 router.delete('/deletebook/:id',verifyToken,deleteBook);
 router.put('/updatebook/:id',verifyToken,changeNameAuthorBook);
