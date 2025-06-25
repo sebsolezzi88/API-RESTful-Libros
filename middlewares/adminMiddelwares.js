@@ -1,4 +1,4 @@
-export const isAdmin = (req,res) =>{
+export const isAdmin = (req,res,next) =>{
     
     try {
         //Comprobar si el usuario es un 'admin'
@@ -8,6 +8,7 @@ export const isAdmin = (req,res) =>{
         
         next();
     } catch (error) {
-         return res.status(500).json({status:'error', message:'internal server error',error});
+        
+        return res.status(500).json({status:'error', message:'internal server error',error});
     }
 }
