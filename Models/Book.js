@@ -15,6 +15,25 @@ Book.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    category: {
+      type: DataTypes.ENUM(
+        'fiction',
+        'non-fiction',
+        'fantasy',
+        'science',
+        'history',
+        'biography',
+        'romance',
+        'mystery',
+        'horror',
+        'self-help',
+        'philosophy',
+        'technology',
+        'poetry',
+        'comics'),
+      allowNull: false,
+      defaultValue: 'fiction'
+},
     status: {
       type: DataTypes.ENUM('unread', 'reading', 'read'),
       allowNull: false,
