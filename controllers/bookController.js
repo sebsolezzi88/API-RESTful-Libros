@@ -234,6 +234,24 @@ export const filterBooksByStatus = async (req, res) => {
   }
 }
 
+/* Obtener los libros del usuario por categoria */
+export const filterBooksByCategory = async (req, res) => {
+  const { category } = req.query;
+
+  
+  if (!validCategories.includes(category)) {
+    return res.status(400).json({ status: 'error', message: 'Invalid category' });
+  }
+
+  try {
+    const books = await Book.findAll({where: {category,userId: req.user.id}});
+
+    return res.json({ status: 'success', books });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error', error });
+  }
+};
+
 /* Obtener libros por su titulo like */
 export const searchBooksByTitle = async (req, res) => {
   const { title } = req.query;
