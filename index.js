@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import bookRoutes from './routes/bookRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import sequelize from './config/database.js';
 import './Models/User.js';
 import './Models/Book.js';
