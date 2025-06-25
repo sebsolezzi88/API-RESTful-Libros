@@ -1,9 +1,16 @@
 import Book from '../Models/Book.js'
+import User from '../Models/User.js';
 
 //Obtener todos los libros
 export const getAllBooks = async (req , res )=>{
     try {
-        const books = await Book.findAll();
+        const books = await Book.findAll({
+            include: {
+                model: User,
+                as: 'user',
+                attributes: ['id','username'] 
+            }
+        });
         
         if (books.length === 0) {
             return res.json({
@@ -19,6 +26,7 @@ export const getAllBooks = async (req , res )=>{
             books
         });
     } catch (error) {
+        console.log(error)
           return res.status(500).json({status:'error', message:'internal server error',error});
     }
 }
