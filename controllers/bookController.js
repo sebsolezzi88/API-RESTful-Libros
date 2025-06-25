@@ -36,7 +36,30 @@ export const addBook = async (req,res) =>{
 export const changeNameAuthorBook = async (req,res) =>{}
 
 /* Solo el usuario que lo creo y el admin pueden borrarlos*/
-export const deleteBook = async (req,res) =>{}
+export const deleteBook = async (req,res) =>{
+    const idBook = req.params.id;
+    const idUser = req.user.id;
+    
+    try {
+        //buscar el libro
+        const bookExist = await Book.findOne({where:{id:idBook}});
+        
+        if (!bookExist) {
+            return res.status(404).json({status:'error', message:'book not found'});
+        }
+        //Consultar por si el user creo la publicacion o si es admin
+        if (bookExist.userId !== idUser && req.user.role !== 'admin') {
+            return res.status(403).json({ status:'error', message: 'you do not have permission to delete this book.' });
+        }
+        // Eliminar el libro
+        await bookExist.destroy();
+
+        return res.status(200).json({ status:'success', message: 'successfully deleted book' });
+        
+    } catch (error) {
+        return res.status(500).json({status:'error', message:'internal server error', err:error});
+    }
+}
 
 /* Solo el usuario que lo creo puede cambiar el estado de lectura*/
 export const changeBookStatus = async (req,res) =>{}
