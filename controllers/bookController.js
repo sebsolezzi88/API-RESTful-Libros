@@ -33,7 +33,40 @@ export const addBook = async (req,res) =>{
 }
 
 /* Solo el usuario que lo creo y el admin pueden cambiar nombre y autor*/
-export const changeNameAuthorBook = async (req,res) =>{}
+export const changeNameAuthorBook = async (req,res) =>{
+    const  {bookname, author} = req.body;
+    const idBook = req.params.id;
+    const idUser = req.user.id;
+
+    if(bookname.trim() === '' || author.trim() === ''){
+          return res.status(400).json({status:'error', message:'bookname or author required'});
+    }
+    
+    try {
+        //buscar el libro
+        const bookExist = await Book.findOne({where:{id:idBook}});
+        
+        if (!bookExist) {
+            return res.status(404).json({status:'error', message:'book not found'});
+        }
+        //Consultar por si el user creo la publicacion o si es admin
+        if (bookExist.userId !== idUser && req.user.role !== 'admin') {
+            return res.status(403).json({ status:'error', message: 'you do not have permission to update this book.' });
+        }
+        
+        // Editar los campos
+        bookExist.bookname = bookname;
+        bookExist.author = author
+        
+        //guardar cambios
+        await bookExist.save()
+
+        return res.status(200).json({ status:'success', message: 'successfully update book' });
+        
+    } catch (error) {
+        return res.status(500).json({status:'error', message:'internal server error', err:error});
+    }
+}
 
 /* Solo el usuario que lo creo y el admin pueden borrarlos*/
 export const deleteBook = async (req,res) =>{
