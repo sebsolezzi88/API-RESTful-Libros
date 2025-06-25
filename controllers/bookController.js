@@ -116,9 +116,38 @@ export const changeBookStatus = async (req,res) =>{
 
         return res.json({ status:'success',message: 'book updated', book });
     } catch (error) {
-        return res.status(500).json({ message: 'Error al actualizar el estado' });
+        return res.status(500).json({status:'error', message:'internal server error'});
     }
 }
 
 /* Solo el usuario que lo creo puede cambiar el puntaje*/
-export const changeBookRating= async (req,res) =>{}
+export const changeBookRating= async (req,res) =>{
+    const bookId = req.params.id;
+    const userId = req.user.id;
+
+     // Verificar si rating viene en el body
+    if (!req.body || typeof req.body.rating === 'undefined') {
+        return res.status(400).json({ status: 'error', message: 'rating is required' });
+    }
+
+    const rating = parseInt(req.body.rating, 10);
+
+    // Validar que rating sea un número entre 0 y 10
+    if (isNaN(rating) || rating < 0 || rating > 10) {
+        return res.status(400).json({ status: 'error', message: 'invalid rating' });
+    }
+
+    try {
+        const book = await Book.findOne({ where: { id: bookId, userId } });
+        if (!book) {
+            return res.status(404).json({ status: 'error', message: 'book not found' });
+        }
+
+        book.rating = rating;
+        await book.save();
+
+        return res.json({ status: 'success', message: 'rating updated', book });
+    } catch (error) {
+        return res.status(500).json({status:'error', message:'internal server error'});
+    }
+}
