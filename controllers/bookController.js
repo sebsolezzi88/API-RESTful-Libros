@@ -180,3 +180,26 @@ export const getAllBooksFromUser = async (req, res) => {
         });
     }
 }
+
+/* Obtener libros por status */
+export const filterBooksByStatus = async (req, res) => {
+  const { status } = req.query;
+
+  const validStatuses = ['unread', 'reading', 'read'];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ status: 'error', message: 'Invalid status' });
+  }
+
+  try {
+    const books = await Book.findAll({
+      where: {
+        status,
+        userId: req.user.id
+      }
+    });
+
+    return res.json({ status: 'success', books });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: 'Internal server error', error });
+  }
+};
