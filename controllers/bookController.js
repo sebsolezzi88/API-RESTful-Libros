@@ -151,3 +151,32 @@ export const changeBookRating= async (req,res) =>{
         return res.status(500).json({status:'error', message:'internal server error'});
     }
 }
+
+/* Obteneer todos los libros de un usuario */
+export const getAllBooksFromUser = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        const books = await Book.findAll({ where: { userId } });
+
+        if (books.length === 0) {
+            return res.json({
+                status: 'success',
+                message: 'No books found for this user',
+                books: []
+            });
+        }
+
+        return res.json({
+            status: 'success',
+            message: 'Books retrieved successfully',
+            books
+        });
+    } catch (error) {
+        console.error('Error al obtener libros del usuario:', error);
+        return res.status(500).json({
+            status: 'error',
+            message: 'Error retrieving books'
+        });
+    }
+}
