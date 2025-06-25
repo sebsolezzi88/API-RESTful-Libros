@@ -38,7 +38,10 @@ app.use('/api/book',bookRoutes);
 app.use('/api/admin',adminRoutes);
 
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log('Servidor escuchando en puerto 3000');
+  });
+}
 
+export default app;
