@@ -35,10 +35,10 @@ Esta es una API RESTful construida en **Node.js** que permite a los usuarios reg
 ### Libros (`/api/books`)
 
 - `GET /getbooks` → Obtener todos los libros del usuario logueado
-- `GET /filtercategory?category=fiction` -> Obtener los libros por una categoria espesifica
-- `GET /searchbooks?title=javascript` -> Obtener los libros por un titulo
-- `GET /filterbooks?status=read` -> Obtener los libros por su estado (`unread`, `reading`,`read`)
-- `GET /stats` -> Obtiene estadistiscas
+- `GET /filtercategory?category=fiction` → Obtener los libros por una categoria espesifica
+- `GET /searchbooks?title=javascript` → Obtener los libros por un titulo
+- `GET /filterbooks?status=read` → Obtener los libros por su estado (`unread`, `reading`,`read`)
+- `GET /stats` → Obtiene estadistiscas
 
   **Respuesta de ejemplo:**
   ```json
