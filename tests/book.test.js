@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../index.js'
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJwaWthY2h1VXNlciIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzUwODkyOTI2LCJleHAiOjE3NTA4OTY1MjZ9.LwaEHoc4KVVWle5pLewb0gyjVLJ_e_vrp4rrDdfFXKE';
+const token = 'tokendeprubea';
 describe('GET /api/books/getbooks', () => {
   it('debería requerir autenticación', async () => {
     const res = await request(app).get('/api/book/getbooks');
